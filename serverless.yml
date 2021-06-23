@@ -1,0 +1,24 @@
+service: karaoke-backend-api
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: us-west-2
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-offline
+
+functions:
+  hello:
+    handler: src/functions/hello.handler
+    events:
+      - http:
+          path: greetings/hello
+          method: post
+  goodbye:
+    handler: src/functions/goodbye.handler
+    events:
+      - http:
+          path: greetings/goodbye
+          method: post

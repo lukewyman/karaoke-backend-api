@@ -24,6 +24,7 @@ module.exports = {
     'import/extensions': 'off',
     'import/no-unresolved': 'error',
     'no-console': 'off',
+    'import/prefer-default-export': 'off',
     'import/order': [
       'error',
       {
