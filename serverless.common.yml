@@ -1,0 +1,15 @@
+custom:
+  webpack:
+    webpackConfig: '../../webpack.config.js'
+    packager: 'yarn'
+    includeModules:
+      nodeModulesRelativeDir: '../../'
+  serverless-offline:
+    httpPort: 3003
+  dynamodb:
+    start:
+      port: 5000
+      inMemory: true
+      migrate: true
+    stages:
+      - dev

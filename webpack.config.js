@@ -1,9 +1,10 @@
 const path = require('path');
 const slsw = require('serverless-webpack');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 const entries = {};
 
-Object.keys(slsw.lib.entries).forEach(key => (entries[key] = ['./source-map-install.js', slsw.lib.entries[key]]));
+Object.keys(slsw.lib.entries).forEach(key => (entries[key] = ['../../source-map-install.js', slsw.lib.entries[key]]));
 
 module.exports = {
   mode: slsw.lib.webpack.isLocal ? 'development' : 'production',
@@ -11,6 +12,13 @@ module.exports = {
   devtool: 'source-map',
   resolve: {
     extensions: ['.js', '.jsx', '.json', '.ts', '.tsx'],
+    plugins: [
+      new TsconfigPathsPlugin({
+        configFile: '../../tsconfig.json',
+        logLevel: 'info',
+        extensions: ['.ts', '.tsx'],
+      }),
+    ],
   },
   output: {
     libraryTarget: 'commonjs',
