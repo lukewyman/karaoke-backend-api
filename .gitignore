@@ -4,4 +4,7 @@ coverage
 .env
 node_modules
 .serverless
+.webpack
+.dynamodb
 node_modules
+yarn.lock
