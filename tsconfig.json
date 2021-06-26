@@ -27,5 +27,5 @@
     "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */
   },
   "exclude": ["node_modules", ".webpack", ".serverless", "coverage"],
-  "include": ["src"]
+  "include": ["services"]
 }
