@@ -1,4 +1,4 @@
-service: karaoke-backend-greetings-api
+service: karaoke-backend-singers-api
 
 package:
   individually: true
@@ -6,14 +6,41 @@ package:
 provider:
   name: aws
   runtime: nodejs12.x
-  region: us-west-2
+  region: ${opt:region, 'us-west-2'}
+  stage: ${opt:stage, 'dev'}
+  environment:
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
+    SINGERS_TABLE: Singers-${self:provider.stage}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:DeleteItem
+      Resource: 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.SINGERS_TABLE}'
 
-custom: ${file(../../serverless.common.yml):custom}
+custom:
+  webpack:
+    webpackConfig: '../../webpack.config.js'
+    packager: 'yarn'
+    includeModules:
+      nodeModulesRelativeDir: '../../'
+  serverless-offline:
+    httpPort: 3003
+  dynamodb:
+    start:
+      port: 5000
+      inMemory: true
+      migrate: true
+    stages:
+      - dev
 
 plugins:
   - serverless-webpack
-  #- serverless-dynamodb-local
-  #- serverless-plugin-typescript
+  - serverless-dynamodb-local
   - serverless-offline
 
 functions:
@@ -30,21 +57,42 @@ functions:
       - http:
           path: karaoke/singers/{singerId}
           method: get
+          cors: true
   getAllSingers:
     handler: src/functions/KAR_SNG_get_all_singers.handler
     events:
       - http:
           path: karaoke/singers/
           method: get
+          cors: true
   updateSinger:
     handler: src/functions/KAR_SNG_update_singer.handler
     events:
       - http:
           path: karaoke/singers/{singerId}
           method: put
+          cors: true
   deleteSinger:
     handler: src/functions/KAR_SNG_delete_singer.handler
     events:
       - http:
           path: karaoke/singers/{singerId}
           method: delete
+          cors: true
+
+resources:
+  Resources:
+    PostsListTable:
+      Type: AWS::DynamoDB::Table
+      DeletionPolicy: Delete
+      Properties:
+        TableName: ${self:provider.environment.SINGERS_TABLE}
+        AttributeDefinitions:
+          - AttributeName: singerId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: singerId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1

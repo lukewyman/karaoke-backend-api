@@ -1,12 +1,25 @@
 import { APIGatewayProxyEvent, Handler, APIGatewayProxyResult } from 'aws-lambda';
+import * as uuid from 'uuid';
 import middify from '@lib/src/middify';
 import formatJSONResponse from '@lib/src/formatJsonResponse';
+import CreateSinger from '@singers/src/dtos/createSingerDto';
+import singerService from '@singers/src/database';
 
-export const handler: Handler = middify(async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  try {
-    const method = event.httpMethod;
-    return formatJSONResponse(200, `Soon this function will be able to ${method} a singer!`);
-  } catch (err) {
-    return formatJSONResponse(500, err);
+export const handler: Handler = middify(
+  async (event: APIGatewayProxyEvent & CreateSinger): Promise<APIGatewayProxyResult> => {
+    const { firstName, lastName, stageName, email } = event.body;
+    try {
+      const singerId: string = uuid.v4();
+      const singer = await singerService.createSinger({
+        singerId,
+        firstName,
+        lastName,
+        stageName,
+        email,
+      });
+      return formatJSONResponse(201, singer);
+    } catch (err) {
+      return formatJSONResponse(500, err);
+    }
   }
-});
+);
