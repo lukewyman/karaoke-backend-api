@@ -1,0 +1,50 @@
+service: karaoke-backend-greetings-api
+
+package:
+  individually: true
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: us-west-2
+
+custom: ${file(../../serverless.common.yml):custom}
+
+plugins:
+  - serverless-webpack
+  #- serverless-dynamodb-local
+  #- serverless-plugin-typescript
+  - serverless-offline
+
+functions:
+  createSinger:
+    handler: src/functions/KAR_SNG_create_singer.handler
+    events:
+      - http:
+          path: karaoke/singers
+          method: post
+          cors: true
+  getSinger:
+    handler: src/functions/KAR_SNG_get_singer.handler
+    events:
+      - http:
+          path: karaoke/singers/{singerId}
+          method: get
+  getAllSingers:
+    handler: src/functions/KAR_SNG_get_all_singers.handler
+    events:
+      - http:
+          path: karaoke/singers/
+          method: get
+  updateSinger:
+    handler: src/functions/KAR_SNG_update_singer.handler
+    events:
+      - http:
+          path: karaoke/singers/{singerId}
+          method: put
+  deleteSinger:
+    handler: src/functions/KAR_SNG_delete_singer.handler
+    events:
+      - http:
+          path: karaoke/singers/{singerId}
+          method: delete

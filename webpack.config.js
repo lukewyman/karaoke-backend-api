@@ -8,7 +8,7 @@ Object.keys(slsw.lib.entries).forEach(key => (entries[key] = ['../../source-map-
 
 module.exports = {
   mode: slsw.lib.webpack.isLocal ? 'development' : 'production',
-  entry: entries,
+  entry: slsw.lib.entries,
   devtool: 'source-map',
   resolve: {
     extensions: ['.js', '.jsx', '.json', '.ts', '.tsx'],

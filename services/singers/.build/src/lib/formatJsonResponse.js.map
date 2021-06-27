@@ -1,0 +1,1 @@
+{"version":3,"file":"formatJsonResponse.js","sourceRoot":"","sources":["../../../src/lib/formatJsonResponse.ts"],"names":[],"mappings":";;;AAAO,IAAM,kBAAkB,GAAG,UAAC,UAAkB,EAAE,QAAa;IAClE,OAAO;QACL,UAAU,YAAA;QACV,IAAI,EAAE,IAAI,CAAC,SAAS,CAAC,QAAQ,CAAC;KAC/B,CAAC;AACJ,CAAC,CAAC;AALW,QAAA,kBAAkB,sBAK7B"}
