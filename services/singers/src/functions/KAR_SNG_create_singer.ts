@@ -1,6 +1,6 @@
 import { APIGatewayProxyEvent, Handler, APIGatewayProxyResult } from 'aws-lambda';
-import middify from '../lib/middify';
-import formatJSONResponse from '../lib/formatJsonResponse';
+import middify from '@lib/src/middify';
+import formatJSONResponse from '@lib/src/formatJsonResponse';
 
 export const handler: Handler = middify(async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   try {
