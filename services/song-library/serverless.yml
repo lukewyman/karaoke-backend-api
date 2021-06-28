@@ -1,0 +1,99 @@
+service: karaoke-backend-song-library-api
+
+package:
+  individually: true
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: ${opt:region, 'us-west-2'}
+  stage: ${opt:stage, 'dev'}
+  environment:
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
+    SONGS_TABLE: Songs-${self:provider.stage}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:DeleteItem
+        - dynamodb:UpdateItem
+      Resource: 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.SONGS_TABLE}'
+
+custom:
+  webpack:
+    webpackConfig: '../../webpack.config.js'
+    packager: 'yarn'
+    includeModules:
+      nodeModulesRelativeDir: '../../'
+  serverless-offline:
+    httpPort: 3003
+  dynamodb:
+    start:
+      port: 5000
+      inMemory: true
+      migrate: true
+    stages:
+      - dev
+
+plugins:
+  - serverless-webpack
+  - serverless-dynamodb-local
+  - serverless-offline
+
+functions:
+  createSong:
+    handler: src/functions/KAR_LIB_create_song.handler
+    events:
+      - http:
+          path: karaoke/songs
+          method: post
+          cors: true
+  getSong:
+    handler: src/functions/KAR_LIB_get_song.handler
+    events:
+      - http:
+          path: karaoke/songs/{songId}
+          method: get
+          cors: true
+  getAllSongs:
+    handler: src/functions/KAR_LIB_get_all_songs.handler
+    events:
+      - http:
+          path: karaoke/songs
+          method: get
+          cors: true
+  updateSong:
+    handler: src/functions/KAR_LIB_update_song.handler
+    events:
+      - http:
+          path: karaoke/songs/{songId}
+          method: put
+          cors: true
+  deleteSong:
+    handler: src/functions/KAR_LIB_delete_song.handler
+    events:
+      - http:
+          path: karaoke/songs/{songId}
+          method: delete
+          cors: true
+
+resources:
+  Resources:
+    PostsListTable:
+      Type: AWS::DynamoDB::Table
+      DeletionPolicy: Delete
+      Properties:
+        TableName: ${self:provider.environment.SONGS_TABLE}
+        AttributeDefinitions:
+          - AttributeName: songId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: songId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1

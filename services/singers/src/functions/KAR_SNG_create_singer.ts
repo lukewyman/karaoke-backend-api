@@ -17,6 +17,7 @@ export const handler: Handler = middify(
         stageName,
         email,
       });
+
       return formatJSONResponse(201, singer);
     } catch (err) {
       return formatJSONResponse(500, err);
