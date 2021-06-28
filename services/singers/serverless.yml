@@ -20,6 +20,7 @@ provider:
         - dynamodb:GetItem
         - dynamodb:PutItem
         - dynamodb:DeleteItem
+        - dynamodb:UpdateItem
       Resource: 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.SINGERS_TABLE}'
 
 custom:

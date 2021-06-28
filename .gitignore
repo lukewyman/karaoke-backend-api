@@ -6,5 +6,5 @@ node_modules
 .serverless
 .webpack
 .dynamodb
-node_modules
+.build
 yarn.lock
