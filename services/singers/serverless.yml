@@ -83,7 +83,7 @@ functions:
 
 resources:
   Resources:
-    PostsListTable:
+    singersTable:
       Type: AWS::DynamoDB::Table
       DeletionPolicy: Delete
       Properties:
